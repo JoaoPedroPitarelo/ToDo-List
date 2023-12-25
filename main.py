@@ -1,11 +1,12 @@
 """" Algoritmo de Lista To Do """
-from database_manager import GerenciadorBD
+
+from database_manager import GerenciadorBD #  Importando de 'database_manager.py' a classe gerenciadora do BD  
 import os
 
-# conexão com banco de dados
+# Conexão com o gerenciador do BD
 db_manager = GerenciadorBD()
 
-# Cores e constantes
+#  Constantes da cores de acordo com os escapes ANSII
 RESET = '\033[0m'
 RED = '\033[31m'
 GREEN = '\033[32m'
@@ -21,14 +22,17 @@ NEGRITO = '\033[1m'
 CLARO = '\033[90m'
 
 
+#  Função para limpar o terminar
 def clear_terminal():
     if os.name == 'nt':  # Windows
         os.system('cls')
     elif os.name == 'posix':
-        os.system('clear')  # Linux
+        os.system('clear')  # Sistemas Linux
 
 
 #  Funções da parte "Home" do algoritmo
+
+#  Função que exibe o 'logo' do algoritmo. Essa função é para organização do código
 def logo():
     print(NEGRITO, "                     ", GREEN + "_____                   _             _ \n" +
         WHITE + "     /////|           " + GREEN + "|_   _|__ _ __ _ __ ___ (_)_ __   __ _| |\n" +
@@ -43,6 +47,7 @@ def logo():
     )
 
 
+#  Fução que exibe a lista de tarefas
 def exibir_tarefas():
     lista_tarefas = db_manager.tarefas()
 
@@ -84,12 +89,13 @@ def exibir_tarefas():
         print("_" * 24, "\n")
 
 
+#  Função para a entrada do usuário nas opções do algoritmo
 def entrada_opcao():
     print("\nOPÇÕES: ")
     print("     [A]dicionar Tarefa  [N]ão Feita  [D]esc tarefas\n"  # Opções de entrada do Usuário
           "     [R]emover Tarefa    [F]eita      [S]air")
 
-    while True:
+    while True:  # Cria um loop que certifica que o usuário não irá passar se não digitar uma das opções válidas
         entrada_opcao = input('\n Escolha: ').upper().strip()
 
         if entrada_opcao.isalpha() and entrada_opcao.upper() in ["A", "R", "F", "N", "D", "S"]:
@@ -127,9 +133,9 @@ def main():  # Função main
             break
 
 
-#  Funções das opções do algoritmo (adicionar, remover, marcar como feita...)
+#  Funções das opções do algoritmo (adicionar, remover, marcar como feita, sair...)
 
-#  Validação da data
+#  Validação de data
 def validacao_data():
     while True:
         dia_entrada = input("\n  Dia: ")
@@ -155,6 +161,7 @@ def validacao_data():
     return dia_entrada, mes_entrada, ano_entrada
 
 
+#  Adicionar uma tarefa à lista de tarefas
 def adicionar_tarefa():
     print(CLARO, '\n "Faça em breves palavras Ex: Tomar café"', RESET)
     nova_tarefa = input("   Nome Tarefa: ")
@@ -177,6 +184,7 @@ def adicionar_tarefa():
     
     data_validada = validacao_data()
 
+    #  Essa parte da função foi feita para formatação da data. Para que não saísse por exemplo: 2/1/2023
     if data_validada[0] in range(0, 9) and data_validada[1] in range(0, 9):
         data_formatada = f"0{data_validada[0]}/0{data_validada[1]}/{data_validada[2]}"
     elif data_validada[0] in range(0, 9):
@@ -194,11 +202,10 @@ def validacao_indice():
     lista_de_tuplas_indices = db_manager.indices()
     tupla_indice = ()
 
-    for tupla in lista_de_tuplas_indices:
-        tupla_indice += tupla
+    for tupla in lista_de_tuplas_indices: #  Parte da função para desempacotar as listas de tuplas 
+       tupla_indice += tupla
 
-    entrada_indice = ''
-    while True:
+    while True:  #  Além de verificar se o que o usuario digitou é um inteiro verifica se esse inteiro está entre os índices
         if tupla_indice == ():
             return None
 
